@@ -1,0 +1,24 @@
+<ng-container class="exam-container">
+  <div class="container mt-4">
+    <h2 class="mb-4">Exam for {{ subject }}</h2>
+    <form (ngSubmit)="submitExam()">
+      <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
+        <label for="question{{ i }}" class="form-label">{{ question.questionText }}</label>
+        <textarea
+          id="question{{ i }}"
+          [(ngModel)]="exam.questions[i].studentAnswer"
+          name="answer{{ i }}"
+          class="form-control"
+          rows="3"
+          required>
+        </textarea>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading">
+        Submit Exam
+      </button>
+    </form>
+  </div>
+</ng-container>

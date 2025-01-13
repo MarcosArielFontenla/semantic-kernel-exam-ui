@@ -1,0 +1,31 @@
+<ng-container class="home-container">
+  <div class="container">
+    <div class="row min-vh-100 align-items-center justify-content-center">
+      <div class="col-md-6 text-center">
+        <div class="card shadow">
+          <div class="card-body p-5">
+            <h2 class="mb-4">Select a Subject:</h2>
+            <div class="mb-4">
+              <select
+                class="form-select form-select-lg mb-4"
+                [(ngModel)]="selectedSubject"
+                (change)="onSubjectChange()">
+                <option value="" disabled selected>Choose a subject...</option>
+                @for (subject of subjects; track subject) {
+                  <option [value]="subject">{{ subject }}</option>
+                }
+              </select>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-lg"
+              [disabled]="!selectedSubject"
+              (click)="startExam()">
+              Start Exam
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

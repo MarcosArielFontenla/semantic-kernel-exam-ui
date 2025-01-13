@@ -1,0 +1,9 @@
+<ng-container class="result-container">
+  <div class="container mt-4">
+    <h2>Exam Results</h2>
+    <div *ngIf="evaluation" class="mt-3">
+      <p><strong>Score:</strong> {{ evaluation?.score }}</p>
+      <p><strong>Feedback:</strong> {{ evaluation?.feedback }}</p>
+    </div>
+  </div>
+</ng-container>
