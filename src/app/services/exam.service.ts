@@ -9,7 +9,10 @@ import { ExamEvaluation } from '../models/exam-evaluation.model';
 })
 export class ExamService {
 
-  private apiUrl: string = 'https://localhost:44318/api/Exams/evaluate';
+  private examController: string = 'Exams';
+  private examEvaluateEndpoint: string = 'evaluate';
+
+  private apiUrl: string = `https://localhost:44318/api/${this.examController}/${this.examEvaluateEndpoint}`;
 
   constructor(private http: HttpClient) { }
 
