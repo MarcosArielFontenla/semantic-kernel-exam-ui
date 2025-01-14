@@ -2,23 +2,86 @@
   <div class="container mt-4">
     <h2 class="mb-4">Exam for {{ subject }}</h2>
     <form (ngSubmit)="submitExam()">
-      <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
-        <label for="question{{ i }}" class="form-label">{{ question.questionText }}</label>
-        <textarea
-          id="question{{ i }}"
-          [(ngModel)]="exam.questions[i].studentAnswer"
-          name="answer{{ i }}"
-          class="form-control"
-          rows="3"
-          required>
-        </textarea>
+
+      <!-- Predefined Exam Type -->
+      <div *ngIf="examType === 'predefined'">
+        <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
+          <label for="question{{ i }}" class="form-label">{{ question.questionText }}</label>
+          <textarea
+            id="question{{ i }}"
+            [(ngModel)]="exam.questions[i].studentAnswer"
+            name="answer{{ i }}"
+            class="form-control"
+            rows="3"
+            required>
+          </textarea>
+        </div>
       </div>
+
+      <!-- Multiple Choice Exam Type -->
+      <div *ngIf="examType === 'multiple-choice'">
+        <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
+          <p>{{ question.questionText }}</p>
+          <div *ngIf="question.options && question.options.length > 0; else noOptions">
+            <div *ngFor="let option of question.options">
+              <input
+                type="radio"
+                [value]="option"
+                name="question{{ i }}"
+                [(ngModel)]="exam.questions[i].studentAnswer"
+                required>
+              {{ option }}
+            </div>
+          </div>
+          <ng-template #noOptions>
+            <p class="text-danger"> No options available for this question.</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- True - False Exam Type -->
+      <div *ngIf="examType === 'true-false'">
+        <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
+          <p>{{ question.questionText }}</p>
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="True"
+                name="question{{ i }}"
+                [(ngModel)]="exam.questions[i].studentAnswer"
+                required>
+              True
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="False"
+                name="question{{ i }}"
+                [(ngModel)]="exam.questions[i].studentAnswer"
+                required>
+              False
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary mx-2"
+        (click)="goBack()">
+        Go Back
+      </button>
+
       <button
         type="submit"
         class="btn btn-primary"
         [disabled]="loading">
         Submit Exam
       </button>
+
     </form>
   </div>
 </ng-container>

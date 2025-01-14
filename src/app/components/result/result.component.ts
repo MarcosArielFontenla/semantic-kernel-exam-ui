@@ -27,4 +27,8 @@ export class ResultComponent implements OnInit {
     }
   }
 
+  goHome(): void {
+    this.router.navigate(['/home']);
+  }
+
 }

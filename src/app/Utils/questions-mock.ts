@@ -1,4 +1,4 @@
-export const questions_mock = [
+export const questions_mock: string[] = [
   'What is Finance?:',
   'The role of Finance in an Organization:',
   'Importance of Data and Technology:',

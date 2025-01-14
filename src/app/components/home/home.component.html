@@ -15,11 +15,22 @@
                   <option [value]="subject">{{ subject }}</option>
                 }
               </select>
+
+              <h2 class="mb-4">Select Exam Type:</h2>
+              <select class="form-select form-select-lg mb-4"
+              [(ngModel)]="selectedExamType"
+              (change)="onExamTypeChange()">
+                <option value="" disabled selected> Choose an exam type...</option>
+                @for (examType of examTypes; track examType) {
+                  <option [value]="examType">{{ examType }}</option>
+                }
+              </select>
+
             </div>
             <button
               type="button"
               class="btn btn-primary btn-lg"
-              [disabled]="!selectedSubject"
+              [disabled]="!selectedSubject || !selectedExamType"
               (click)="startExam()">
               Start Exam
             </button>
