@@ -23,14 +23,14 @@
         <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
           <p>{{ question.questionText }}</p>
           <div *ngIf="question.options && question.options.length > 0; else noOptions">
-            <div *ngFor="let option of question.options">
+            <div *ngFor="let option of question.options; let j = index">
               <input
-                type="radio"
-                [value]="option"
+                type="checkbox"
                 name="question{{ i }}"
-                [(ngModel)]="exam.questions[i].studentAnswer"
-                required>
-              {{ option }}
+                [id]="'option' + i + '_' + j"
+                [value]="option"
+                (change)="onCheckboxChange($event, i, option)">
+                <label for="'option' + i + '_' + j">{{option}}</label>
             </div>
           </div>
           <ng-template #noOptions>

@@ -57,6 +57,21 @@ export class ExamComponent implements OnInit {
     })
   }
 
+  onCheckboxChange(event: Event, questionIndex: number, option: string): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    let selectedAnswers = this.exam.questions[questionIndex].studentAnswer ? this.exam.questions[questionIndex].studentAnswer.split(',') : [];
+
+    if (isChecked) {
+      if (!selectedAnswers.includes(option)) {
+        selectedAnswers.push(option);
+      }
+    } else {
+      selectedAnswers = selectedAnswers.filter((answer) => answer !== option);
+    }
+
+    this.exam.questions[questionIndex].studentAnswer = selectedAnswers.join(',');
+  }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
