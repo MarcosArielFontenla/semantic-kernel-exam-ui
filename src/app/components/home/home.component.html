@@ -6,26 +6,20 @@
           <div class="card-body p-5">
             <h2 class="mb-4">Select a Subject:</h2>
             <div class="mb-4">
-              <select
-                class="form-select form-select-lg mb-4"
-                [(ngModel)]="selectedSubject"
-                (change)="onSubjectChange()">
-                <option value="" disabled selected>Choose a subject...</option>
-                @for (subject of subjects; track subject) {
-                  <option [value]="subject">{{ subject }}</option>
-                }
-              </select>
+              <app-custom-dropdown
+                [options]="subjects"
+                [placeholder]="'Choose a subject...'"
+                [selected]="selectedSubject"
+                (selectionChange)="selectedSubject = $event">
+              </app-custom-dropdown>
 
               <h2 class="mb-4">Select Exam Type:</h2>
-              <select class="form-select form-select-lg mb-4"
-              [(ngModel)]="selectedExamType"
-              (change)="onExamTypeChange()">
-                <option value="" disabled selected> Choose an exam type...</option>
-                @for (examType of examTypes; track examType) {
-                  <option [value]="examType">{{ examType }}</option>
-                }
-              </select>
-
+              <app-custom-dropdown
+                [options]="examTypes"
+                [placeholder]="'Choose an exam type...'"
+                [selected]="selectedExamType"
+                (selectionChange)="selectedExamType = $event">
+              </app-custom-dropdown>
             </div>
             <button
               type="button"

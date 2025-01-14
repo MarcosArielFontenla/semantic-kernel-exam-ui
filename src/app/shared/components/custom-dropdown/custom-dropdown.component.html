@@ -1,0 +1,9 @@
+<select
+  class="form-select form-select-lg mb-4"
+  [ngModel]="selected"
+  (ngModelChange)="onChange($event)">
+  <option value="" disabled selected>{{ placeholder }}</option>
+  @for (option of options; track option) {
+    <option [value]="option">{{ option }}</option>
+  }
+</select>

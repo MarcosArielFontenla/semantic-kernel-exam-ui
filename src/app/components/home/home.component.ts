@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { subjects_mock } from '../../Utils/subjects-mock';
 import { FormsModule } from '@angular/forms';
 import { exam_types_mock } from '../../Utils/exam-types-mock';
+import { CustomDropdownComponent } from '../../shared/components/custom-dropdown/custom-dropdown.component';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule],
+  imports: [FormsModule, CustomDropdownComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
