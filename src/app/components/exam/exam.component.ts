@@ -7,10 +7,13 @@ import { CommonModule } from '@angular/common';
 import { Exam } from '../../models/exam-model';
 import { Question } from '../../models/question-model';
 import { QuestionsData } from '../../Utils/questions-data-mock';
+import { PredefinedExamComponent } from '../../core/components/predefined-exam/predefined-exam.component';
+import { MultipleChoiceExamComponent } from '../../core/components/multiple-choice-exam/multiple-choice-exam.component';
+import { TrueFalseExamComponent } from '../../core/components/true-false-exam/true-false-exam.component';
 
 @Component({
   selector: 'app-exam',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent],
   templateUrl: './exam.component.html',
   styleUrl: './exam.component.css'
 })

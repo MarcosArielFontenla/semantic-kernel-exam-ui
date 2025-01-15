@@ -4,69 +4,22 @@
     <form (ngSubmit)="submitExam()">
 
       <!-- Predefined Exam Type -->
-      <div *ngIf="examType === 'predefined'">
-        <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
-          <label for="question{{ i }}" class="form-label">{{ question.questionText }}</label>
-          <textarea
-            id="question{{ i }}"
-            [(ngModel)]="exam.questions[i].studentAnswer"
-            name="answer{{ i }}"
-            class="form-control"
-            rows="3"
-            required>
-          </textarea>
-        </div>
-      </div>
+      <app-predefined-exam
+        *ngIf="examType === 'predefined'"
+        [questions]="exam.questions">
+      </app-predefined-exam>
 
       <!-- Multiple Choice Exam Type -->
-      <div *ngIf="examType === 'multiple-choice'">
-        <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
-          <p>{{ question.questionText }}</p>
-          <div *ngIf="question.options && question.options.length > 0; else noOptions">
-            <div *ngFor="let option of question.options; let j = index">
-              <input
-                type="checkbox"
-                name="question{{ i }}"
-                [id]="'option' + i + '_' + j"
-                [value]="option"
-                (change)="onCheckboxChange($event, i, option)">
-                <label for="'option' + i + '_' + j">{{option}}</label>
-            </div>
-          </div>
-          <ng-template #noOptions>
-            <p class="text-danger"> No options available for this question.</p>
-          </ng-template>
-        </div>
-      </div>
+      <app-multiple-choice-exam
+        *ngIf="examType === 'multiple-choice'"
+        [questions]="exam.questions">
+      </app-multiple-choice-exam>
 
       <!-- True - False Exam Type -->
-      <div *ngIf="examType === 'true-false'">
-        <div *ngFor="let question of exam.questions; let i = index" class="mb-3">
-          <p>{{ question.questionText }}</p>
-          <div>
-            <label>
-              <input
-                type="radio"
-                value="True"
-                name="question{{ i }}"
-                [(ngModel)]="exam.questions[i].studentAnswer"
-                required>
-              True
-            </label>
-          </div>
-          <div>
-            <label>
-              <input
-                type="radio"
-                value="False"
-                name="question{{ i }}"
-                [(ngModel)]="exam.questions[i].studentAnswer"
-                required>
-              False
-            </label>
-          </div>
-        </div>
-      </div>
+      <app-true-false-exam
+        *ngIf="examType === 'true-false'"
+        [questions]="exam.questions">
+      </app-true-false-exam>
 
       <button
         type="submit"

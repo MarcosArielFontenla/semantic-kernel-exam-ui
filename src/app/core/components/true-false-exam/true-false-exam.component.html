@@ -1,0 +1,27 @@
+@for (question of questions; track $index) {
+  <div class="mb-3">
+    <p>{{ question.questionText }}</p>
+    <div>
+      <label>
+        <input
+          type="radio"
+          value="True"
+          [(ngModel)]="question.studentAnswer"
+          [name]="'question' + $index"
+          required>
+        True
+      </label>
+    </div>
+    <div>
+      <label>
+        <input
+          type="radio"
+          value="False"
+          [(ngModel)]="question.studentAnswer"
+          [name]="'question' + $index"
+          required>
+        False
+      </label>
+    </div>
+  </div>
+}

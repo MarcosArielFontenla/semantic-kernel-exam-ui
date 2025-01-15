@@ -1,0 +1,11 @@
+<div *ngFor="let question of questions; let i = index" class="mb-3">
+  <p>{{ question.questionText }}</p>
+  <div *ngFor="let option of question.options; let j = index">
+    <input
+      type="checkbox"
+      [id]="'option' + i + '_' + j"
+      [value]="option"
+      (change)="onCheckboxChange($event, question, option)">
+    <label for="'option' + i + '_' + j">{{ option }}</label>
+  </div>
+</div>

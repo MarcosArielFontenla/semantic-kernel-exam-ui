@@ -1,0 +1,13 @@
+@for (question of questions; track $index) {
+  <div class="mb-3">
+    <label [for]="'question' + $index" class="form-label">{{ question.questionText }}</label>
+    <textarea
+      [id]="'question' + $index"
+      [(ngModel)]="question.studentAnswer"
+      [name]="'answer' + $index"
+      class="form-control"
+      rows="3"
+      required>
+    </textarea>
+  </div>
+}
