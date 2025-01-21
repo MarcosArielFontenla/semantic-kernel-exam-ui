@@ -10,5 +10,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './predefined-exam.component.css'
 })
 export class PredefinedExamComponent {
-  @Input() questions: Question[] = [];
+  @Input() question!: Question;
 }

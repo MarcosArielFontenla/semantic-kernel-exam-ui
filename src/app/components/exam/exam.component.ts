@@ -24,6 +24,7 @@ export class ExamComponent implements OnInit {
   exam: Exam = { subject: '', questions: [] };
   questionsMock: string[] = questions_mock;
   loading: boolean = false;
+  currentQuestionIndex: number = 0;
 
   constructor(
     private examService: ExamService,
@@ -46,7 +47,7 @@ export class ExamComponent implements OnInit {
   }
 
   submitExam(): void {
-    if (this.loading) return;
+    if (this.loading || !this.canProceedToNextQuestion) return;
 
     this.loading = true;
     this.examService.evaluateExam(this.exam).subscribe({
@@ -78,6 +79,33 @@ export class ExamComponent implements OnInit {
 
   goBack(): void {
     this.navigateToHome();
+  }
+
+  previousQuestion(): void {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+    }
+  }
+
+  onNextQuestion(): void {
+    if (this.canProceedToNextQuestion && !this.isLastQuestion) {
+      this.currentQuestion.isCompleted = true;
+      this.currentQuestionIndex++;
+    } else {
+      alert('Please select an answer before proceeding to the next question!');
+    }
+  }
+
+  get currentQuestion(): Question {
+    return this.exam.questions[this.currentQuestionIndex];
+  }
+
+  get isLastQuestion(): boolean {
+    return this.currentQuestionIndex === this.exam.questions.length - 1;
+  }
+
+  get canProceedToNextQuestion(): boolean {
+    return this.currentQuestion?.studentAnswer?.trim().length > 0;
   }
 
   private initializeExam(): void {

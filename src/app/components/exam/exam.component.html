@@ -1,12 +1,19 @@
 <ng-container class="exam-container">
   <div class="container mt-4">
-    <h2 class="mb-4">Exam for {{ subject }}</h2>
-    <form (ngSubmit)="submitExam()">
+    <div class="d-flex justify-content-center align-items-center">
+      <h2 class="mb-4">Exam for {{ subject }}</h2>
+    </div>
+    <div class="progress mb-4">
+      <div class="progress-bar" [style.width.%]="((currentQuestionIndex + 1) / exam.questions.length * 100)">
+        Question {{currentQuestionIndex + 1}} of {{exam.questions.length}}
+      </div>
+    </div>
 
+    <form (ngSubmit)="submitExam()">
       <!-- Predefined Exam Type -->
       <app-predefined-exam
         *ngIf="examType === 'predefined'"
-        [questions]="exam.questions">
+        [question]="currentQuestion">
       </app-predefined-exam>
 
       <!-- Multiple Choice Exam Type -->
@@ -21,19 +28,38 @@
         [questions]="exam.questions">
       </app-true-false-exam>
 
-      <button
-        type="submit"
-        class="btn btn-primary mx-2"
-        (click)="goBack()">
-        Go Back
-      </button>
+      <div class="d-flex justify-content-between mt-4">
+        <button
+          type="submit"
+          class="btn btn-primary mx-2"
+          (click)="goBack()">
+          Go Home
+        </button>
 
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="loading">
-        Submit Exam
-      </button>
+        <button
+          type="button"
+          class="btn btn-secondary mx-2"
+          (click)="previousQuestion()"
+          [disabled]="currentQuestionIndex === 0">
+          Previous
+        </button>
+
+        <button
+          *ngIf="!isLastQuestion"
+          type="button"
+          class="btn btn-primary mx-2"
+          (click)="onNextQuestion()">
+          Next
+        </button>
+
+        <button
+          *ngIf="isLastQuestion"
+          type="submit"
+          class="btn btn-success"
+          [disabled]="!canProceedToNextQuestion || loading">
+          Submit Exam
+        </button>
+      </div>
 
     </form>
   </div>
