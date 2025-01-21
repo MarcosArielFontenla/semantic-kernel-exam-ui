@@ -2,11 +2,12 @@
   <div class="mb-3">
     <label [for]="'question' + $index" class="form-label">{{ question.questionText }}</label>
     <textarea
+      class="form-control border border-info-subtle"
+      rows="3"
+      placeholder="Enter your answer here..."
       [id]="'question' + $index"
       [(ngModel)]="question.studentAnswer"
       [name]="'answer' + $index"
-      class="form-control"
-      rows="3"
       required>
     </textarea>
   </div>
