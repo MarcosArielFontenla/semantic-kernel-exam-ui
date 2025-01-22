@@ -10,5 +10,5 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './true-false-exam.component.css'
 })
 export class TrueFalseExamComponent {
-  @Input() questions: Question[] = [];
+  @Input() question!: Question;
 }

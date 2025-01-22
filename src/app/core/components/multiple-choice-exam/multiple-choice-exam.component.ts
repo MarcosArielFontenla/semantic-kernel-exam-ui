@@ -9,11 +9,15 @@ import { CommonModule } from '@angular/common';
   styleUrl: './multiple-choice-exam.component.css'
 })
 export class MultipleChoiceExamComponent {
-  @Input() questions: Question[] = [];
+  @Input() question!: Question;
 
-  onCheckboxChange(event: Event, question: Question, option: string): void {
+  isOptionSelected(option: string): boolean {
+    return this.question.studentAnswer?.split(',').includes(option) ?? false;
+  }
+
+  onCheckboxChange(event: Event, option: string): void {
     const isChecked = (event.target as HTMLInputElement).checked;
-    let selectedAnswers = question.studentAnswer ? question.studentAnswer.split(',') : [];
+    let selectedAnswers = this.question.studentAnswer ? this.question.studentAnswer.split(',') : [];
 
     if (isChecked) {
       if (!selectedAnswers.includes(option)) {
@@ -23,6 +27,6 @@ export class MultipleChoiceExamComponent {
       selectedAnswers = selectedAnswers.filter((answer) => answer !== option);
     }
 
-    question.studentAnswer = selectedAnswers.join(',');
+    this.question.studentAnswer = selectedAnswers.join(',');
   }
 }

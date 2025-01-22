@@ -1,29 +1,27 @@
-@for (question of questions; track $index) {
-  <div class="mb-3">
-    <p>{{ question.questionText }}</p>
-    <div class="form-check">
-      <label class="form-check-label">
-        <input
-          class="form-check-input"
-          type="radio"
-          value="True"
-          [(ngModel)]="question.studentAnswer"
-          [name]="'question' + $index"
-          required>
-        True
-      </label>
-    </div>
-    <div class="form-check">
-      <label class="form-check-label">
-        <input
-          class="form-check-input"
-          type="radio"
-          value="False"
-          [(ngModel)]="question.studentAnswer"
-          [name]="'question' + $index"
-          required>
-        False
-      </label>
-    </div>
+<div class="mb-3">
+  <p>{{ question.questionText }}</p>
+  <div class="form-check">
+    <label class="form-check-label">
+      <input
+        class="form-check-input"
+        type="radio"
+        value="True"
+        name="question"
+        [(ngModel)]="question.studentAnswer"
+        required>
+      True
+    </label>
   </div>
-}
+  <div class="form-check">
+    <label class="form-check-label">
+      <input
+        class="form-check-input"
+        type="radio"
+        value="False"
+        [(ngModel)]="question.studentAnswer"
+        name="question"
+        required>
+      False
+    </label>
+  </div>
+</div>

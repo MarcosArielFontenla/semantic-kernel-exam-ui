@@ -19,13 +19,13 @@
       <!-- Multiple Choice Exam Type -->
       <app-multiple-choice-exam
         *ngIf="examType === 'multiple-choice'"
-        [questions]="exam.questions">
+        [question]="currentQuestion">
       </app-multiple-choice-exam>
 
       <!-- True - False Exam Type -->
       <app-true-false-exam
         *ngIf="examType === 'true-false'"
-        [questions]="exam.questions">
+        [question]="currentQuestion">
       </app-true-false-exam>
 
       <div class="d-flex justify-content-between mt-4">

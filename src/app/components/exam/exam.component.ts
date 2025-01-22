@@ -30,8 +30,7 @@ export class ExamComponent implements OnInit {
     private examService: ExamService,
     private router: Router,
     private route: ActivatedRoute) {
-
-    }
+  }
 
   ngOnInit(): void {
     const { subject, examType } = this.route.snapshot.queryParams;
@@ -46,7 +45,7 @@ export class ExamComponent implements OnInit {
     }
   }
 
-  submitExam(): void {
+  protected submitExam(): void {
     if (this.loading || !this.canProceedToNextQuestion) return;
 
     this.loading = true;
@@ -62,32 +61,17 @@ export class ExamComponent implements OnInit {
     })
   }
 
-  onCheckboxChange(event: Event, questionIndex: number, option: string): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    let selectedAnswers = this.exam.questions[questionIndex].studentAnswer ? this.exam.questions[questionIndex].studentAnswer.split(',') : [];
-
-    if (isChecked) {
-      if (!selectedAnswers.includes(option)) {
-        selectedAnswers.push(option);
-      }
-    } else {
-      selectedAnswers = selectedAnswers.filter((answer) => answer !== option);
-    }
-
-    this.exam.questions[questionIndex].studentAnswer = selectedAnswers.join(',');
-  }
-
-  goBack(): void {
+  protected goBack(): void {
     this.navigateToHome();
   }
 
-  previousQuestion(): void {
+  protected previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
     }
   }
 
-  onNextQuestion(): void {
+  protected onNextQuestion(): void {
     if (this.canProceedToNextQuestion && !this.isLastQuestion) {
       this.currentQuestion.isCompleted = true;
       this.currentQuestionIndex++;
@@ -108,6 +92,7 @@ export class ExamComponent implements OnInit {
     return this.currentQuestion?.studentAnswer?.trim().length > 0;
   }
 
+  // Private methods
   private initializeExam(): void {
     this.exam = {
       subject: this.subject,
