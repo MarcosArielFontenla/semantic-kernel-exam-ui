@@ -1,5 +1,5 @@
 <div class="mb-3">
-  <p>{{ question.questionText }}</p>
+  <p>{{ question.questionText | questionPrefix:currentIndex }}</p>
   <div class="form-check">
     <label class="form-check-label">
       <input

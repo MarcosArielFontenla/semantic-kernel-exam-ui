@@ -1,15 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { Question } from '../../../models/question-model';
 import { CommonModule } from '@angular/common';
+import { QuestionPrefixPipe } from '../../../shared/pipes/question-prefix.pipe';
 
 @Component({
   selector: 'app-multiple-choice-exam',
-  imports: [CommonModule],
+  imports: [CommonModule, QuestionPrefixPipe],
   templateUrl: './multiple-choice-exam.component.html',
   styleUrl: './multiple-choice-exam.component.css'
 })
 export class MultipleChoiceExamComponent {
   @Input() question!: Question;
+  @Input() currentIndex!: number;
 
   isOptionSelected(option: string): boolean {
     return this.question.studentAnswer?.split(',').includes(option) ?? false;

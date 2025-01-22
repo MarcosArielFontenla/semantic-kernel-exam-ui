@@ -10,10 +10,11 @@ import { QuestionsData } from '../../Utils/questions-data-mock';
 import { PredefinedExamComponent } from '../../core/components/predefined-exam/predefined-exam.component';
 import { MultipleChoiceExamComponent } from '../../core/components/multiple-choice-exam/multiple-choice-exam.component';
 import { TrueFalseExamComponent } from '../../core/components/true-false-exam/true-false-exam.component';
+import { ValidateAnswerDirective } from '../../shared/directives/validate-answer.directive';
 
 @Component({
   selector: 'app-exam',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent, ValidateAnswerDirective],
   templateUrl: './exam.component.html',
   styleUrl: './exam.component.css'
 })
@@ -75,8 +76,6 @@ export class ExamComponent implements OnInit {
     if (this.canProceedToNextQuestion && !this.isLastQuestion) {
       this.currentQuestion.isCompleted = true;
       this.currentQuestionIndex++;
-    } else {
-      alert('Please select an answer before proceeding to the next question!');
     }
   }
 
@@ -98,7 +97,6 @@ export class ExamComponent implements OnInit {
       subject: this.subject,
       questions: this.generateQuestionsByType()
     };
-    console.log('Initialized exam:', this.exam);
   }
 
   private generateQuestionsByType(): Question[] {

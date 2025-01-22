@@ -13,22 +13,25 @@
       <!-- Predefined Exam Type -->
       <app-predefined-exam
         *ngIf="examType === 'predefined'"
-        [question]="currentQuestion">
+        [question]="currentQuestion"
+        [currentIndex]="currentQuestionIndex">
       </app-predefined-exam>
 
       <!-- Multiple Choice Exam Type -->
       <app-multiple-choice-exam
         *ngIf="examType === 'multiple-choice'"
-        [question]="currentQuestion">
+        [question]="currentQuestion"
+        [currentIndex]="currentQuestionIndex">
       </app-multiple-choice-exam>
 
       <!-- True - False Exam Type -->
       <app-true-false-exam
         *ngIf="examType === 'true-false'"
-        [question]="currentQuestion">
+        [question]="currentQuestion"
+        [currentIndex]="currentQuestionIndex">
       </app-true-false-exam>
 
-      <div class="d-flex justify-content-between mt-4">
+      <div class="d-flex justify-content-center mt-4">
         <button
           type="submit"
           class="btn btn-primary mx-2"
@@ -38,7 +41,7 @@
 
         <button
           type="button"
-          class="btn btn-secondary mx-2"
+          class="btn btn-info mx-2"
           (click)="previousQuestion()"
           [disabled]="currentQuestionIndex === 0">
           Previous
@@ -48,7 +51,8 @@
           *ngIf="!isLastQuestion"
           type="button"
           class="btn btn-primary mx-2"
-          (click)="onNextQuestion()">
+          (click)="onNextQuestion()"
+          [appValidateAnswer]="currentQuestion.studentAnswer">
           Next
         </button>
 

@@ -1,5 +1,5 @@
 <div class="mb-3">
-  <p>{{ question.questionText }}</p>
+  <p>{{ question.questionText | questionPrefix:currentIndex }}</p>
   <div *ngFor="let option of question.options; let j = index" class="form-check">
     <input
       class="form-check-input"
