@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { questions_mock } from '../../Utils/questions-mock';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExamService } from '../../services/exam.service';
@@ -11,14 +11,16 @@ import { PredefinedExamComponent } from '../../core/components/predefined-exam/p
 import { MultipleChoiceExamComponent } from '../../core/components/multiple-choice-exam/multiple-choice-exam.component';
 import { TrueFalseExamComponent } from '../../core/components/true-false-exam/true-false-exam.component';
 import { ValidateAnswerDirective } from '../../shared/directives/validate-answer.directive';
+import { Subject } from 'rxjs';
+import { CustomModalQuestionValidatorComponent } from '../../shared/components/custom-modal-question-validator/custom-modal-question-validator.component';
 
 @Component({
   selector: 'app-exam',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent, ValidateAnswerDirective],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent, ValidateAnswerDirective, CustomModalQuestionValidatorComponent],
   templateUrl: './exam.component.html',
   styleUrl: './exam.component.css'
 })
-export class ExamComponent implements OnInit {
+export class ExamComponent implements OnInit, OnDestroy {
 
   subject: string = '';
   examType: string = '';
@@ -26,6 +28,8 @@ export class ExamComponent implements OnInit {
   questionsMock: string[] = questions_mock;
   loading: boolean = false;
   currentQuestionIndex: number = 0;
+
+  private readonly destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private examService: ExamService,
@@ -35,31 +39,51 @@ export class ExamComponent implements OnInit {
 
   ngOnInit(): void {
     const { subject, examType } = this.route.snapshot.queryParams;
+    const savedState = localStorage.getItem('examState');
 
-    if (!subject || !examType) {
-      this.router.navigate(['/home']);
-      return;
+    if (savedState) {
+      const state = JSON.parse(savedState);
+
+      if (state.examType !== examType || state.subject !== subject) {
+        this.subject = subject;
+        this.examType = examType;
+        this.initializeExam();
+      } else {
+        this.subject = state.subject || subject;
+        this.examType = state.examType || examType;
+        this.exam = state.exam;
+        this.currentQuestionIndex = state.currentQuestionIndex;
+      }
     } else {
+      if (!subject || !examType) {
+        this.router.navigate(['/home']);
+        return;
+      }
       this.subject = subject;
       this.examType = examType;
       this.initializeExam();
     }
+    window.addEventListener('beforeunload', this.saveState.bind(this));
   }
 
   protected submitExam(): void {
     if (this.loading || !this.canProceedToNextQuestion) return;
 
     this.loading = true;
-    this.examService.evaluateExam(this.exam).subscribe({
-      next: (evaluation) => {
-        this.router.navigate(['/exam-result'], { state: { evaluation } });
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error evaluating exam:', error);
-        this.loading = false;
-      }
-    })
+
+    setTimeout(() => {
+      this.examService.evaluateExam(this.exam).subscribe({
+        next: (evaluation) => {
+          localStorage.removeItem('examState');
+          this.router.navigate(['/exam-result'], { state: { evaluation } });
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error evaluating exam:', error);
+          this.loading = false;
+        }
+      });
+    }, 2000);
   }
 
   protected goBack(): void {
@@ -79,19 +103,13 @@ export class ExamComponent implements OnInit {
     }
   }
 
-  get currentQuestion(): Question {
-    return this.exam.questions[this.currentQuestionIndex];
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    window.removeEventListener('beforeunload', this.saveState.bind(this));
   }
 
-  get isLastQuestion(): boolean {
-    return this.currentQuestionIndex === this.exam.questions.length - 1;
-  }
-
-  get canProceedToNextQuestion(): boolean {
-    return this.currentQuestion?.studentAnswer?.trim().length > 0;
-  }
-
-  // Private methods
+  // PRIVATE METHODS
   private initializeExam(): void {
     this.exam = {
       subject: this.subject,
@@ -145,7 +163,30 @@ export class ExamComponent implements OnInit {
     });
   }
 
+  private saveState(): void {
+    const state = {
+      subject: this.subject,
+      examType: this.examType,
+      exam: this.exam,
+      currentQuestionIndex: this.currentQuestionIndex,
+    };
+    localStorage.setItem('examState', JSON.stringify(state));
+  }
+
   private navigateToHome(): void {
+    localStorage.removeItem('examState');
     this.router.navigate(['/home']);
+  }
+
+  get currentQuestion(): Question {
+    return this.exam.questions[this.currentQuestionIndex];
+  }
+
+  get isLastQuestion(): boolean {
+    return this.currentQuestionIndex === this.exam.questions.length - 1;
+  }
+
+  get canProceedToNextQuestion(): boolean {
+    return this.currentQuestion?.studentAnswer?.trim().length > 0;
   }
 }

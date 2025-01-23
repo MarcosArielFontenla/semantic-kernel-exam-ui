@@ -9,6 +9,11 @@
       </div>
     </div>
 
+    <app-custom-modal-question-validator
+      title="Exam Validation Error"
+      message="Please fill or select an answer before proceeding!">
+    </app-custom-modal-question-validator>
+
     <form (ngSubmit)="submitExam()">
       <!-- Predefined Exam Type -->
       <app-predefined-exam
