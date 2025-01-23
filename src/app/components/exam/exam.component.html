@@ -38,38 +38,38 @@
 
       <div class="d-flex justify-content-center mt-4">
         <button
-          type="submit"
-          class="btn btn-primary mx-2"
-          (click)="goBack()">
-          Go Home
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-info mx-2"
-          (click)="previousQuestion()"
-          [disabled]="currentQuestionIndex === 0">
-          Previous
-        </button>
-
-        <button
-          *ngIf="!isLastQuestion"
-          type="button"
-          class="btn btn-primary mx-2"
-          (click)="onNextQuestion()"
-          [appValidateAnswer]="currentQuestion.studentAnswer">
-          Next
-        </button>
-
-        <button
           *ngIf="isLastQuestion"
+          mat-flat-button
           type="submit"
-          class="btn btn-success"
+          class="btn btn-success mx-2"
           [disabled]="!canProceedToNextQuestion || loading">
           Submit Exam
         </button>
       </div>
-
     </form>
+    <div class="d-flex justify-content-center mt-4">
+      <button
+        mat-flat-button
+        class="mx-2"
+        (click)="goBack()">
+        Go Home
+      </button>
+
+      <button
+        mat-flat-button
+        (click)="previousQuestion()"
+        [disabled]="currentQuestionIndex === 0">
+        Previous
+      </button>
+
+      <button
+        *ngIf="!isLastQuestion"
+        mat-flat-button
+        class="mx-2"
+        (click)="onNextQuestion()"
+        [appValidateAnswer]="currentQuestion.studentAnswer">
+        Next
+      </button>
+    </div>
   </div>
 </ng-container>

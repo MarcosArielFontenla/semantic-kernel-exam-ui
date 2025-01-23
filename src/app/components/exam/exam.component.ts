@@ -13,10 +13,23 @@ import { TrueFalseExamComponent } from '../../core/components/true-false-exam/tr
 import { ValidateAnswerDirective } from '../../shared/directives/validate-answer.directive';
 import { Subject } from 'rxjs';
 import { CustomModalQuestionValidatorComponent } from '../../shared/components/custom-modal-question-validator/custom-modal-question-validator.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-exam',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent, ValidateAnswerDirective, CustomModalQuestionValidatorComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    PredefinedExamComponent,
+    MultipleChoiceExamComponent,
+    TrueFalseExamComponent,
+    ValidateAnswerDirective,
+    CustomModalQuestionValidatorComponent,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './exam.component.html',
   styleUrl: './exam.component.css'
 })

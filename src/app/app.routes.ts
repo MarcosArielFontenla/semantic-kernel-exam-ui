@@ -6,6 +6,7 @@ import { ResultComponent } from './components/result/result.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'exam', component: ExamComponent },
+  { path: 'exam/:subject/:examType', component: ExamComponent },
   { path: 'exam-result', component: ResultComponent },
   { path: '**', redirectTo: '' }
 ];
