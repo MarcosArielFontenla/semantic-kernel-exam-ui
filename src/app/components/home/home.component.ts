@@ -4,7 +4,6 @@ import { subjects_mock } from '../../Utils/subjects-mock';
 import { FormsModule } from '@angular/forms';
 import { exam_types_mock } from '../../Utils/exam-types-mock';
 import { CustomDropdownComponent } from '../../shared/components/custom-dropdown/custom-dropdown.component';
-import { ExamStateService } from '../../services/exam-state.service';
 
 @Component({
   selector: 'app-home',
@@ -15,16 +14,14 @@ import { ExamStateService } from '../../services/exam-state.service';
 export class HomeComponent {
   subjects: string[] = subjects_mock;
   examTypes: string[] = exam_types_mock;
+
   selectedSubject: string = '';
   selectedExamType: string = '';
 
-  constructor(private router: Router, private examStateService: ExamStateService) {
-  }
+  constructor(private router: Router) { }
 
   startExam(): void {
     if (this.selectedSubject && this.selectedExamType) {
-      this.examStateService.setSubject(this.selectedSubject);
-      this.examStateService.setExamType(this.selectedExamType);
 
       this.router.navigate(['/exam'], {
         queryParams: {
@@ -33,13 +30,5 @@ export class HomeComponent {
         },
       });
     }
-  }
-
-  onSubjectChange() {
-    console.log('Selected subject:', this.selectedSubject);
-  }
-
-  onExamTypeChange() {
-    console.log('Selected exam type:', this.selectedExamType);
   }
 }

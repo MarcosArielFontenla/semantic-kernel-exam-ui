@@ -48,6 +48,7 @@ export class ExamComponent implements OnInit, OnDestroy {
     private examService: ExamService,
     private router: Router,
     private route: ActivatedRoute) {
+
   }
 
   ngOnInit(): void {
