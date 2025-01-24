@@ -1,40 +1,75 @@
 <ng-container class="exam-container">
   <div class="container mt-4">
-    <h2 class="mb-4">Exam for {{ subject }}</h2>
-    <form (ngSubmit)="submitExam()">
+    <div class="d-flex justify-content-center align-items-center">
+      <h2 class="mb-4">Exam for {{ subject }}</h2>
+    </div>
+    <div class="progress mb-4">
+      <div class="progress-bar" [style.width.%]="((currentQuestionIndex + 1) / exam.questions.length * 100)">
+        Question {{currentQuestionIndex + 1}} of {{exam.questions.length}}
+      </div>
+    </div>
 
+    <app-custom-modal-question-validator
+      title="Exam Validation Error"
+      message="Please fill or select an answer before proceeding!">
+    </app-custom-modal-question-validator>
+
+    <form (ngSubmit)="submitExam()">
       <!-- Predefined Exam Type -->
       <app-predefined-exam
         *ngIf="examType === 'predefined'"
-        [questions]="exam.questions">
+        [question]="currentQuestion"
+        [currentIndex]="currentQuestionIndex">
       </app-predefined-exam>
 
       <!-- Multiple Choice Exam Type -->
       <app-multiple-choice-exam
         *ngIf="examType === 'multiple-choice'"
-        [questions]="exam.questions">
+        [question]="currentQuestion"
+        [currentIndex]="currentQuestionIndex">
       </app-multiple-choice-exam>
 
       <!-- True - False Exam Type -->
       <app-true-false-exam
         *ngIf="examType === 'true-false'"
-        [questions]="exam.questions">
+        [question]="currentQuestion"
+        [currentIndex]="currentQuestionIndex">
       </app-true-false-exam>
 
-      <button
-        type="submit"
-        class="btn btn-primary mx-2"
-        (click)="goBack()">
-        Go Back
-      </button>
-
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="loading">
-        Submit Exam
-      </button>
-
+      <div class="d-flex justify-content-center mt-4">
+        <button
+          *ngIf="isLastQuestion"
+          mat-flat-button
+          type="submit"
+          class="btn btn-success mx-2"
+          [disabled]="!canProceedToNextQuestion || loading">
+          Submit Exam
+        </button>
+      </div>
     </form>
+    <div class="d-flex justify-content-center mt-4">
+      <button
+        mat-flat-button
+        class="mx-2"
+        (click)="goBack()">
+        Go Home
+      </button>
+
+      <button
+        mat-flat-button
+        (click)="previousQuestion()"
+        [disabled]="currentQuestionIndex === 0">
+        Previous
+      </button>
+
+      <button
+        *ngIf="!isLastQuestion"
+        mat-flat-button
+        class="mx-2"
+        (click)="onNextQuestion()"
+        [appValidateAnswer]="currentQuestion.studentAnswer">
+        Next
+      </button>
+    </div>
   </div>
 </ng-container>

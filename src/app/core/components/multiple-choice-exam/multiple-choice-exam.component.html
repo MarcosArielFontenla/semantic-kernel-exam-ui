@@ -1,12 +1,13 @@
-<div *ngFor="let question of questions; let i = index" class="mb-3">
-  <p>{{ question.questionText }}</p>
+<div class="mb-3">
+  <p>{{ question.questionText | questionPrefix:currentIndex }}</p>
   <div *ngFor="let option of question.options; let j = index" class="form-check">
     <input
       class="form-check-input"
       type="checkbox"
-      [id]="'option' + i + '_' + j"
+      [id]="'option_' + j"
       [value]="option"
-      (change)="onCheckboxChange($event, question, option)">
-    <label class="form-check-label" for="'option' + i + '_' + j">{{ option }}</label>
+      [checked]="isOptionSelected(option)"
+      (change)="onCheckboxChange($event, option)">
+    <label class="form-check-label" for="'option_' + j">{{ option }}</label>
   </div>
 </div>

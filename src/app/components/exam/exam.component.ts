@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { questions_mock } from '../../Utils/questions-mock';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExamService } from '../../services/exam.service';
@@ -10,82 +10,125 @@ import { QuestionsData } from '../../Utils/questions-data-mock';
 import { PredefinedExamComponent } from '../../core/components/predefined-exam/predefined-exam.component';
 import { MultipleChoiceExamComponent } from '../../core/components/multiple-choice-exam/multiple-choice-exam.component';
 import { TrueFalseExamComponent } from '../../core/components/true-false-exam/true-false-exam.component';
+import { ValidateAnswerDirective } from '../../shared/directives/validate-answer.directive';
+import { Subject } from 'rxjs';
+import { CustomModalQuestionValidatorComponent } from '../../shared/components/custom-modal-question-validator/custom-modal-question-validator.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-exam',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, PredefinedExamComponent, MultipleChoiceExamComponent, TrueFalseExamComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    PredefinedExamComponent,
+    MultipleChoiceExamComponent,
+    TrueFalseExamComponent,
+    ValidateAnswerDirective,
+    CustomModalQuestionValidatorComponent,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './exam.component.html',
   styleUrl: './exam.component.css'
 })
-export class ExamComponent implements OnInit {
+export class ExamComponent implements OnInit, OnDestroy {
 
   subject: string = '';
   examType: string = '';
   exam: Exam = { subject: '', questions: [] };
   questionsMock: string[] = questions_mock;
   loading: boolean = false;
+  currentQuestionIndex: number = 0;
+
+  private readonly destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private examService: ExamService,
     private router: Router,
     private route: ActivatedRoute) {
 
-    }
+  }
 
   ngOnInit(): void {
     const { subject, examType } = this.route.snapshot.queryParams;
+    const savedState = localStorage.getItem('examState');
 
-    if (!subject || !examType) {
-      this.router.navigate(['/home']);
-      return;
+    if (savedState) {
+      const state = JSON.parse(savedState);
+
+      if (state.examType !== examType || state.subject !== subject) {
+        this.subject = subject;
+        this.examType = examType;
+        this.initializeExam();
+      } else {
+        this.subject = state.subject || subject;
+        this.examType = state.examType || examType;
+        this.exam = state.exam;
+        this.currentQuestionIndex = state.currentQuestionIndex;
+      }
     } else {
+      if (!subject || !examType) {
+        this.router.navigate(['/home']);
+        return;
+      }
       this.subject = subject;
       this.examType = examType;
       this.initializeExam();
     }
+    window.addEventListener('beforeunload', this.saveState.bind(this));
   }
 
-  submitExam(): void {
-    if (this.loading) return;
+  protected submitExam(): void {
+    if (this.loading || !this.canProceedToNextQuestion) return;
 
     this.loading = true;
-    this.examService.evaluateExam(this.exam).subscribe({
-      next: (evaluation) => {
-        this.router.navigate(['/exam-result'], { state: { evaluation } });
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error evaluating exam:', error);
-        this.loading = false;
-      }
-    })
+
+    setTimeout(() => {
+      this.examService.evaluateExam(this.exam).subscribe({
+        next: (evaluation) => {
+          localStorage.removeItem('examState');
+          this.router.navigate(['/exam-result'], { state: { evaluation } });
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error evaluating exam:', error);
+          this.loading = false;
+        }
+      });
+    }, 2000);
   }
 
-  onCheckboxChange(event: Event, questionIndex: number, option: string): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    let selectedAnswers = this.exam.questions[questionIndex].studentAnswer ? this.exam.questions[questionIndex].studentAnswer.split(',') : [];
-
-    if (isChecked) {
-      if (!selectedAnswers.includes(option)) {
-        selectedAnswers.push(option);
-      }
-    } else {
-      selectedAnswers = selectedAnswers.filter((answer) => answer !== option);
-    }
-
-    this.exam.questions[questionIndex].studentAnswer = selectedAnswers.join(',');
-  }
-
-  goBack(): void {
+  protected goBack(): void {
     this.navigateToHome();
   }
 
+  protected previousQuestion(): void {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+    }
+  }
+
+  protected onNextQuestion(): void {
+    if (this.canProceedToNextQuestion && !this.isLastQuestion) {
+      this.currentQuestion.isCompleted = true;
+      this.currentQuestionIndex++;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    window.removeEventListener('beforeunload', this.saveState.bind(this));
+  }
+
+  // PRIVATE METHODS
   private initializeExam(): void {
     this.exam = {
       subject: this.subject,
       questions: this.generateQuestionsByType()
     };
-    console.log('Initialized exam:', this.exam);
   }
 
   private generateQuestionsByType(): Question[] {
@@ -134,7 +177,30 @@ export class ExamComponent implements OnInit {
     });
   }
 
+  private saveState(): void {
+    const state = {
+      subject: this.subject,
+      examType: this.examType,
+      exam: this.exam,
+      currentQuestionIndex: this.currentQuestionIndex,
+    };
+    localStorage.setItem('examState', JSON.stringify(state));
+  }
+
   private navigateToHome(): void {
+    localStorage.removeItem('examState');
     this.router.navigate(['/home']);
+  }
+
+  get currentQuestion(): Question {
+    return this.exam.questions[this.currentQuestionIndex];
+  }
+
+  get isLastQuestion(): boolean {
+    return this.currentQuestionIndex === this.exam.questions.length - 1;
+  }
+
+  get canProceedToNextQuestion(): boolean {
+    return this.currentQuestion?.studentAnswer?.trim().length > 0;
   }
 }

@@ -14,14 +14,15 @@ import { CustomDropdownComponent } from '../../shared/components/custom-dropdown
 export class HomeComponent {
   subjects: string[] = subjects_mock;
   examTypes: string[] = exam_types_mock;
+
   selectedSubject: string = '';
   selectedExamType: string = '';
 
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) { }
 
   startExam(): void {
     if (this.selectedSubject && this.selectedExamType) {
+
       this.router.navigate(['/exam'], {
         queryParams: {
           subject: this.selectedSubject,
@@ -29,13 +30,5 @@ export class HomeComponent {
         },
       });
     }
-  }
-
-  onSubjectChange() {
-    console.log('Selected subject:', this.selectedSubject);
-  }
-
-  onExamTypeChange() {
-    console.log('Selected exam type:', this.selectedExamType);
   }
 }
