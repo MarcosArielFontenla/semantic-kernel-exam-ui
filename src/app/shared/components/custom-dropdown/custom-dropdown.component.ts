@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class CustomDropdownComponent {
   @Input() options: string[] = [];
-  @Input() placeholder: string = 'Select an option...';
+  @Input() placeholder: string = '';
   @Input() selected: string = '';
   @Output() selectionChange = new EventEmitter<string>();
 
