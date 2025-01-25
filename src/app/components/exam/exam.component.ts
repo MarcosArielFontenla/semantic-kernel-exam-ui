@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { CustomModalQuestionValidatorComponent } from '../../shared/components/custom-modal-question-validator/custom-modal-question-validator.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ExamStateService } from '../../services/exam-state.service';
 
 @Component({
   selector: 'app-exam',
@@ -46,6 +47,7 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   constructor(
     private examService: ExamService,
+    private examStateService: ExamStateService,
     private router: Router,
     private route: ActivatedRoute) {
 
@@ -53,22 +55,19 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const { subject, examType } = this.route.snapshot.queryParams;
-    const savedState = localStorage.getItem('examState');
+    const savedState = this.examStateService.getExamState();
 
+    // if there is a saved state, restore it
     if (savedState) {
-      const state = JSON.parse(savedState);
-
-      if (state.examType !== examType || state.subject !== subject) {
-        this.subject = subject;
-        this.examType = examType;
-        this.initializeExam();
-      } else {
-        this.subject = state.subject || subject;
-        this.examType = state.examType || examType;
-        this.exam = state.exam;
-        this.currentQuestionIndex = state.currentQuestionIndex;
-      }
+      this.subject = savedState.subject;
+      this.examType = savedState.examType;
+      this.exam = {
+        subject: savedState.subject,
+        questions: savedState.questions
+      };
+      this.currentQuestionIndex = savedState.currentQuestionIndex || 0;
     } else {
+      // If there is no saved state, initialize the exam
       if (!subject || !examType) {
         this.router.navigate(['/home']);
         return;
@@ -77,7 +76,6 @@ export class ExamComponent implements OnInit, OnDestroy {
       this.examType = examType;
       this.initializeExam();
     }
-    window.addEventListener('beforeunload', this.saveState.bind(this));
   }
 
   protected submitExam(): void {
@@ -88,7 +86,7 @@ export class ExamComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.examService.evaluateExam(this.exam).subscribe({
         next: (evaluation) => {
-          localStorage.removeItem('examState');
+          this.clearExamState();
           this.router.navigate(['/exam-result'], { state: { evaluation } });
           this.loading = false;
         },
@@ -107,6 +105,7 @@ export class ExamComponent implements OnInit, OnDestroy {
   protected previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
+      this.saveState();
     }
   }
 
@@ -114,21 +113,30 @@ export class ExamComponent implements OnInit, OnDestroy {
     if (this.canProceedToNextQuestion && !this.isLastQuestion) {
       this.currentQuestion.isCompleted = true;
       this.currentQuestionIndex++;
+      this.saveState();
     }
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    window.removeEventListener('beforeunload', this.saveState.bind(this));
+    this.clearExamState();
   }
 
   // PRIVATE METHODS
   private initializeExam(): void {
+    const questions = this.generateQuestionsByType();
+
+    if (questions.length === 0) {
+      this.router.navigate(['/home']);
+      return;
+    }
+
     this.exam = {
       subject: this.subject,
-      questions: this.generateQuestionsByType()
+      questions: questions,
     };
+    this.saveState();
   }
 
   private generateQuestionsByType(): Question[] {
@@ -178,18 +186,26 @@ export class ExamComponent implements OnInit, OnDestroy {
   }
 
   private saveState(): void {
+    if (!this.exam.questions) {
+      return;
+    }
+
     const state = {
       subject: this.subject,
+      questions: this.exam.questions,
       examType: this.examType,
-      exam: this.exam,
       currentQuestionIndex: this.currentQuestionIndex,
     };
-    localStorage.setItem('examState', JSON.stringify(state));
+    this.examStateService.setExamState(state);
   }
 
   private navigateToHome(): void {
-    localStorage.removeItem('examState');
+    this.clearExamState();
     this.router.navigate(['/home']);
+  }
+
+  private clearExamState(): void {
+    this.examStateService.clearExamState();
   }
 
   get currentQuestion(): Question {
