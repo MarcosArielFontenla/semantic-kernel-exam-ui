@@ -16,6 +16,8 @@ import { CustomModalQuestionValidatorComponent } from '../../shared/components/c
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ExamStateService } from '../../services/exam-state.service';
+import { ExamTypeEnum } from '../../core/enums/exam-type.enum';
+import { ExamEnum } from '../../core/enums/exam.enum';
 
 @Component({
   selector: 'app-exam',
@@ -42,6 +44,11 @@ export class ExamComponent implements OnInit, OnDestroy {
   questionsMock: string[] = questions_mock;
   loading: boolean = false;
   currentQuestionIndex: number = 0;
+  predefined: ExamTypeEnum = ExamTypeEnum.PREDEFINED;
+  multipleChoice: ExamTypeEnum = ExamTypeEnum.MULTIPLE_CHOICE;
+  trueFalse: ExamTypeEnum = ExamTypeEnum.TRUE_FALSE;
+  modalValidatorTitle: ExamEnum = ExamEnum.MODAL_VALIDATOR_TITLE;
+  modalValidatorMessage: ExamEnum = ExamEnum.MODAL_VALIDATOR_MESSAGE;
 
   private readonly destroy$: Subject<void> = new Subject<void>();
 
@@ -141,11 +148,11 @@ export class ExamComponent implements OnInit, OnDestroy {
 
   private generateQuestionsByType(): Question[] {
     switch (this.examType) {
-      case 'predefined':
+      case this.predefined:
         return this.generatePredefinedQuestions();
-      case 'multiple-choice':
+      case this.multipleChoice:
         return this.generateMultipleChoiceQuestions();
-      case 'true-false':
+      case this.trueFalse:
         return this.generateTrueFalseQuestion();
       default:
         console.warn('Invalid exam type:', this.examType);

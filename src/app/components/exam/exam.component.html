@@ -10,41 +10,46 @@
     </div>
 
     <app-custom-modal-question-validator
-      title="Exam Validation Error"
-      message="Please fill or select an answer before proceeding!">
+      [title]="this.modalValidatorTitle"
+      [message]="this.modalValidatorMessage">
     </app-custom-modal-question-validator>
 
     <form (ngSubmit)="submitExam()">
       <!-- Predefined Exam Type -->
-      <app-predefined-exam
-        *ngIf="examType === 'predefined'"
-        [question]="currentQuestion"
-        [currentIndex]="currentQuestionIndex">
-      </app-predefined-exam>
+       @if (examType === this.predefined) {
+        <app-predefined-exam
+          [question]="currentQuestion"
+          [currentIndex]="currentQuestionIndex">
+        </app-predefined-exam>
+      }
 
       <!-- Multiple Choice Exam Type -->
-      <app-multiple-choice-exam
-        *ngIf="examType === 'multiple-choice'"
-        [question]="currentQuestion"
-        [currentIndex]="currentQuestionIndex">
-      </app-multiple-choice-exam>
+      @if (examType === this.multipleChoice) {
+        <app-multiple-choice-exam
+          [question]="currentQuestion"
+          [currentIndex]="currentQuestionIndex">
+        </app-multiple-choice-exam>
+      }
 
       <!-- True - False Exam Type -->
-      <app-true-false-exam
-        *ngIf="examType === 'true-false'"
-        [question]="currentQuestion"
-        [currentIndex]="currentQuestionIndex">
-      </app-true-false-exam>
+      @if (examType === this.trueFalse) {
+        <app-true-false-exam
+          [question]="currentQuestion"
+          [currentIndex]="currentQuestionIndex">
+        </app-true-false-exam>
+      }
 
       <div class="d-flex justify-content-center mt-4">
-        <button
-          *ngIf="isLastQuestion"
-          mat-flat-button
-          type="submit"
-          class="btn btn-success mx-2"
-          [disabled]="!canProceedToNextQuestion || loading">
-          Submit Exam
-        </button>
+        @if (isLastQuestion) {
+          <button
+            *ngIf="isLastQuestion"
+            mat-flat-button
+            type="submit"
+            class="btn btn-success mx-2"
+            [disabled]="!canProceedToNextQuestion || loading">
+            Submit Exam
+          </button>
+        }
       </div>
     </form>
     <div class="d-flex justify-content-center mt-4">
@@ -62,14 +67,16 @@
         Previous
       </button>
 
-      <button
-        *ngIf="!isLastQuestion"
-        mat-flat-button
-        class="mx-2"
-        (click)="onNextQuestion()"
-        [appValidateAnswer]="currentQuestion.studentAnswer">
-        Next
-      </button>
+      @if (!isLastQuestion) {
+        <button
+          *ngIf="!isLastQuestion"
+          mat-flat-button
+          class="mx-2"
+          (click)="onNextQuestion()"
+          [appValidateAnswer]="currentQuestion.studentAnswer">
+          Next
+        </button>
+      }
     </div>
   </div>
 </ng-container>
