@@ -1,6 +1,5 @@
-import { Directive, HostListener, Input, ViewChild } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 import { CustomModalService } from '../services/custom-modal.service';
-import { CustomModalQuestionValidatorComponent } from '../components/custom-modal-question-validator/custom-modal-question-validator.component';
 
 @Directive({
   selector: '[appValidateAnswer]'
