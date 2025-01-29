@@ -89,20 +89,18 @@ export class ExamComponent implements OnInit, OnDestroy {
     if (this.loading || !this.canProceedToNextQuestion) return;
 
     this.loading = true;
-
-    setTimeout(() => {
-      this.examService.evaluateExam(this.exam).subscribe({
-        next: (evaluation) => {
-          this.clearExamState();
-          this.router.navigate(['/exam-result'], { state: { evaluation } });
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error evaluating exam:', error);
-          this.loading = false;
-        }
-      });
-    }, 2000);
+    
+    this.examService.evaluateExam(this.exam).subscribe({
+      next: (evaluation) => {
+        this.clearExamState();
+        this.router.navigate(['/exam-result'], { state: { evaluation } });
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error evaluating exam:', error);
+        this.loading = false;
+      }
+    });
   }
 
   protected goBack(): void {
