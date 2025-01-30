@@ -3,11 +3,10 @@
     <div class="d-flex justify-content-center align-items-center">
       <h2 class="mb-4">Exam for {{ subject }}</h2>
     </div>
-    <div class="progress mb-4">
-      <div class="progress-bar" [style.width.%]="((currentQuestionIndex + 1) / exam.questions.length * 100)">
-        Question {{currentQuestionIndex + 1}} of {{exam.questions.length}}
-      </div>
-    </div>
+    <app-exam-progress
+      [currentQuestionIndex]="currentQuestionIndex"
+      [exam]="exam">
+    </app-exam-progress>
 
     <app-custom-modal-question-validator
       [title]="this.modalValidatorTitle"

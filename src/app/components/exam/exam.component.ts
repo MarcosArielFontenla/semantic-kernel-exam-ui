@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ExamStateService } from '../../services/exam-state.service';
 import { ExamTypeEnum } from '../../core/enums/exam-type.enum';
 import { ExamEnum } from '../../core/enums/exam.enum';
+import { ExamProgressComponent } from './exam-progress/exam-progress.component';
 
 @Component({
   selector: 'app-exam',
@@ -30,6 +31,7 @@ import { ExamEnum } from '../../core/enums/exam.enum';
     TrueFalseExamComponent,
     ValidateAnswerDirective,
     CustomModalQuestionValidatorComponent,
+    ExamProgressComponent,
     MatButtonModule,
     MatIconModule
   ],
