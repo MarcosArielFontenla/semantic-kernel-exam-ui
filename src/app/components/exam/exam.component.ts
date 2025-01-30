@@ -10,7 +10,6 @@ import { QuestionsData } from '../../Utils/questions-data-mock';
 import { PredefinedExamComponent } from '../../core/components/predefined-exam/predefined-exam.component';
 import { MultipleChoiceExamComponent } from '../../core/components/multiple-choice-exam/multiple-choice-exam.component';
 import { TrueFalseExamComponent } from '../../core/components/true-false-exam/true-false-exam.component';
-import { ValidateAnswerDirective } from '../../shared/directives/validate-answer.directive';
 import { Subject } from 'rxjs';
 import { CustomModalQuestionValidatorComponent } from '../../shared/components/custom-modal-question-validator/custom-modal-question-validator.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +18,7 @@ import { ExamStateService } from '../../services/exam-state.service';
 import { ExamTypeEnum } from '../../core/enums/exam-type.enum';
 import { ExamEnum } from '../../core/enums/exam.enum';
 import { ExamProgressComponent } from './exam-progress/exam-progress.component';
+import { ExamButtonActionsComponent } from './exam-button-actions/exam-button-actions.component';
 
 @Component({
   selector: 'app-exam',
@@ -29,9 +29,9 @@ import { ExamProgressComponent } from './exam-progress/exam-progress.component';
     PredefinedExamComponent,
     MultipleChoiceExamComponent,
     TrueFalseExamComponent,
-    ValidateAnswerDirective,
     CustomModalQuestionValidatorComponent,
     ExamProgressComponent,
+    ExamButtonActionsComponent,
     MatButtonModule,
     MatIconModule
   ],

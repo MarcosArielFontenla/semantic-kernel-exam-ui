@@ -51,31 +51,13 @@
         }
       </div>
     </form>
-    <div class="d-flex justify-content-center mt-4">
-      <button
-        mat-flat-button
-        class="mx-2"
-        (click)="goBack()">
-        Go Home
-      </button>
-
-      <button
-        mat-flat-button
-        (click)="previousQuestion()"
-        [disabled]="currentQuestionIndex === 0">
-        Previous
-      </button>
-
-      @if (!isLastQuestion) {
-        <button
-          *ngIf="!isLastQuestion"
-          mat-flat-button
-          class="mx-2"
-          (click)="onNextQuestion()"
-          [appValidateAnswer]="currentQuestion.studentAnswer">
-          Next
-        </button>
-      }
-    </div>
+    <app-exam-button-actions
+      [currentQuestionIndex]="currentQuestionIndex"
+      [isLastQuestion]="isLastQuestion"
+      [canProceedToNextQuestion]="canProceedToNextQuestion"
+      (goBack)="goBack()"
+      (previousQuestion)="previousQuestion()"
+      (nextQuestion)="onNextQuestion()" >
+    </app-exam-button-actions>
   </div>
 </ng-container>

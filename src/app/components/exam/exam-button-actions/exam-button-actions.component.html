@@ -1,0 +1,27 @@
+<ng-container class="button-actions-container">
+    <div class="d-flex justify-content-center mt-4">
+        <button
+          mat-flat-button
+          class="mx-2"
+          (click)="goBack.emit()">
+          Go Home
+        </button>
+  
+        <button
+          mat-flat-button
+          (click)="previousQuestion.emit()"
+          [disabled]="currentQuestionIndex === 0">
+          Previous
+        </button>
+  
+        @if (!isLastQuestion) {
+          <button
+            mat-flat-button
+            class="mx-2"
+            (click)="nextQuestion.emit()" 
+            [appValidateAnswer]="canProceedToNextQuestion">
+            Next
+          </button>
+        }
+    </div>
+</ng-container>
