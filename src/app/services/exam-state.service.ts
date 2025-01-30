@@ -1,12 +1,14 @@
 import { Injectable, signal } from '@angular/core';
 import { ExamState } from '../models/exam-state-model';
+import { ExamTypeEnum } from '../core/enums/exam-type.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExamStateService {
-
+  readonly examType = ExamTypeEnum;
   private examState = signal<ExamState | null>(this.getStateFromStorage());
+  examStateSignal = this.examState.asReadonly();
 
   getExamState(): ExamState | null {
     const state = this.examState();

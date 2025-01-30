@@ -12,13 +12,12 @@ import { MultipleChoiceExamComponent } from '../../core/components/multiple-choi
 import { TrueFalseExamComponent } from '../../core/components/true-false-exam/true-false-exam.component';
 import { Subject } from 'rxjs';
 import { CustomModalQuestionValidatorComponent } from '../../shared/components/custom-modal-question-validator/custom-modal-question-validator.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { ExamStateService } from '../../services/exam-state.service';
 import { ExamTypeEnum } from '../../core/enums/exam-type.enum';
 import { ExamEnum } from '../../core/enums/exam.enum';
 import { ExamProgressComponent } from './exam-progress/exam-progress.component';
 import { ExamButtonActionsComponent } from './exam-button-actions/exam-button-actions.component';
+import { ExamState } from '../../models/exam-state-model';
 
 @Component({
   selector: 'app-exam',
@@ -37,7 +36,6 @@ import { ExamButtonActionsComponent } from './exam-button-actions/exam-button-ac
   styleUrl: './exam.component.css'
 })
 export class ExamComponent implements OnInit, OnDestroy {
-
   subject: string = '';
   examType: string = '';
   exam: Exam = { subject: '', questions: [] };
@@ -61,27 +59,15 @@ export class ExamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const { subject, examType } = this.route.snapshot.queryParams;
-    const savedState = this.examStateService.getExamState();
+    this.initializeExamState();
+    this.handleNavigationState();
+  }
 
-    // if there is a saved state, restore it
-    if (savedState) {
-      this.subject = savedState.subject;
-      this.examType = savedState.examType;
-      this.exam = {
-        subject: savedState.subject,
-        questions: savedState.questions
-      };
-      this.currentQuestionIndex = savedState.currentQuestionIndex || 0;
-    } else {
-      // If there is no saved state, initialize the exam
-      if (!subject || !examType) {
-        this.router.navigate(['/home']);
-        return;
-      }
-      this.subject = subject;
-      this.examType = examType;
-      this.initializeExam();
+  protected showReview(): void {
+    if (this.isLastQuestion) {
+      this.router.navigate(['/exam-preview'], {
+        queryParamsHandling: 'preserve'
+      });
     }
   }
 
@@ -125,10 +111,62 @@ export class ExamComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.clearExamState();
   }
 
   // PRIVATE METHODS
+  private initializeExamState(): void {
+    const { subject, examType } = this.route.snapshot.queryParams;
+    const savedState = this.examStateService.getExamState();
+
+    if (savedState) {
+      this.restoreSavedState(savedState);
+    } else {
+      this.initializeNewExam(subject, examType);
+    }
+  }
+
+  private restoreSavedState(savedState: ExamState): void {
+    this.subject = savedState.subject;
+    this.examType = savedState.examType;
+    this.exam = {
+      subject: savedState.subject,
+      questions: savedState.questions
+    };
+    this.currentQuestionIndex = savedState.currentQuestionIndex || 0;
+  }
+
+  private initializeNewExam(subject: string, examType: string): void {
+    if (!subject || !examType) {
+      this.router.navigate(['/home']);
+      return;
+    }
+
+    this.subject = subject;
+    this.examType = examType;
+    this.initializeExam();
+  }
+
+  private handleNavigationState(): void {
+    const navigationState = this.router.getCurrentNavigation()?.extras.state;
+
+    if (navigationState?.['navigateToQuestion']) {
+      const newIndex = Math.min(Math.max(navigationState['navigateToQuestion'], 0), this.exam.questions.length - 1);
+      this.currentQuestionIndex = newIndex;
+    }
+
+    if (navigationState?.['submitFromReview'] && this.exam.questions.length > 0) {
+      this.submitExam();
+    }
+  }
+
+  private handleQuestionNavigation(requestedIndex: number): void {
+    this.currentQuestionIndex = this.clampQuestionIndex(requestedIndex);
+  }
+
+  private clampQuestionIndex(index: number): number {
+    return Math.min(Math.max(index, 0), this.exam.questions.length - 1);
+  }
+
   private initializeExam(): void {
     const questions = this.generateQuestionsByType();
 

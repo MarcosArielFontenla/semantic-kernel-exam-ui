@@ -41,12 +41,12 @@
       <div class="d-flex justify-content-center mt-4">
         @if (isLastQuestion) {
           <button
-            *ngIf="isLastQuestion"
             mat-flat-button
-            type="submit"
+            type="button"
             class="btn btn-success mx-2"
+            (click)="showReview()"
             [disabled]="!canProceedToNextQuestion || loading">
-            Submit Exam
+            Review Exam
           </button>
         }
       </div>
