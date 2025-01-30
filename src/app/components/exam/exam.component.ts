@@ -31,9 +31,7 @@ import { ExamButtonActionsComponent } from './exam-button-actions/exam-button-ac
     TrueFalseExamComponent,
     CustomModalQuestionValidatorComponent,
     ExamProgressComponent,
-    ExamButtonActionsComponent,
-    MatButtonModule,
-    MatIconModule
+    ExamButtonActionsComponent
   ],
   templateUrl: './exam.component.html',
   styleUrl: './exam.component.css'
