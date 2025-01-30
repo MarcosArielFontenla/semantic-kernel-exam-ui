@@ -1,0 +1,7 @@
+<ng-container class="exam-progress-container">
+    <div class="progress mb-4">
+        <div class="progress-bar" [style.width.%]="((currentQuestionIndex + 1) / exam.questions.length * 100)">
+          Question {{currentQuestionIndex + 1}} of {{exam.questions.length}}
+        </div>
+    </div>
+</ng-container>

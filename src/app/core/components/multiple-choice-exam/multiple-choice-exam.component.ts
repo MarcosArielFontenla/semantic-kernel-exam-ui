@@ -28,7 +28,6 @@ export class MultipleChoiceExamComponent {
     } else {
       selectedAnswers = selectedAnswers.filter((answer) => answer !== option);
     }
-
     this.question.studentAnswer = selectedAnswers.join(',');
   }
 }

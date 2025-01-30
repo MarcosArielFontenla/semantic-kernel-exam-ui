@@ -13,17 +13,17 @@ export class ResultComponent implements OnInit {
 
   evaluation: ExamEvaluation | null = null;
 
-  constructor(private router: Router) {
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
+    
+    if (!this.evaluation) {
+      this.router.navigate(['/home']);
+    }
 
     if (navigation && navigation.extras.state) {
       this.evaluation = navigation.extras.state?.['evaluation'] || null;
-    }
-  }
-
-  ngOnInit(): void {
-    if (!this.evaluation) {
-      this.router.navigate(['/home']);
     }
   }
 

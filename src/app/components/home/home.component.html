@@ -8,7 +8,7 @@
             <div class="mb-4">
               <app-custom-dropdown
                 [options]="subjects"
-                [placeholder]="'Choose a subject...'"
+                [placeholder]="this.chooseSubject"
                 [selected]="selectedSubject"
                 (selectionChange)="selectedSubject = $event">
               </app-custom-dropdown>
@@ -16,7 +16,7 @@
               <h2 class="mb-4">Select Exam Type:</h2>
               <app-custom-dropdown
                 [options]="examTypes"
-                [placeholder]="'Choose an exam type...'"
+                [placeholder]="this.chooseExamType"
                 [selected]="selectedExamType"
                 (selectionChange)="selectedExamType = $event">
               </app-custom-dropdown>

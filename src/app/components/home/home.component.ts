@@ -4,6 +4,7 @@ import { subjects_mock } from '../../Utils/subjects-mock';
 import { FormsModule } from '@angular/forms';
 import { exam_types_mock } from '../../Utils/exam-types-mock';
 import { CustomDropdownComponent } from '../../shared/components/custom-dropdown/custom-dropdown.component';
+import { HomeEnum } from '../../core/enums/home.enum';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,9 @@ export class HomeComponent {
 
   selectedSubject: string = '';
   selectedExamType: string = '';
+
+  chooseSubject: HomeEnum = HomeEnum.CHOOSE_SUBJECT;
+  chooseExamType: HomeEnum = HomeEnum.CHOOSE_EXAM_TYPE;
 
   constructor(private router: Router) { }
 

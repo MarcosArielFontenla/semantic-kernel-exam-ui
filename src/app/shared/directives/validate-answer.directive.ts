@@ -1,20 +1,22 @@
-import { Directive, HostListener, Input, ViewChild } from '@angular/core';
+import { Directive, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { CustomModalService } from '../services/custom-modal.service';
-import { CustomModalQuestionValidatorComponent } from '../components/custom-modal-question-validator/custom-modal-question-validator.component';
 
 @Directive({
   selector: '[appValidateAnswer]'
 })
 export class ValidateAnswerDirective {
-  @Input('appValidateAnswer') answer: string | undefined;
+  @Input('appValidateAnswer') canProceed!: boolean;
+  @Output() validationFailed = new EventEmitter<void>();
 
   constructor(private modalService: CustomModalService) {}
 
   @HostListener('click', ['$event'])
   onClick(event: Event): void {
-    if (!this.answer?.trim()) {
+    if (!this.canProceed) {
       event.preventDefault();
+      event.stopPropagation();
       this.modalService.show();
+      this.validationFailed.emit();
     }
   }
 }
