@@ -1,0 +1,10 @@
+<div class="timer-container">
+    <mat-card>
+        <mat-card-title>Time Remaining</mat-card-title>
+        <mat-card-content>
+            <div class="timer-display">
+                {{ timerService.formatTime(timerService.timeLeft()) }}
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
