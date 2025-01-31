@@ -3,6 +3,8 @@
     <div class="d-flex justify-content-center align-items-center">
       <h2 class="mb-4">Exam for {{ subject }}</h2>
     </div>
+    <app-exam-timer></app-exam-timer>
+
     <app-exam-progress
       [currentQuestionIndex]="currentQuestionIndex"
       [exam]="exam">

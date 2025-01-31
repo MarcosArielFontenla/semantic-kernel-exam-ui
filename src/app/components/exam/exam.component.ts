@@ -18,6 +18,7 @@ import { ExamEnum } from '../../core/enums/exam.enum';
 import { ExamProgressComponent } from './exam-progress/exam-progress.component';
 import { ExamButtonActionsComponent } from './exam-button-actions/exam-button-actions.component';
 import { ExamState } from '../../models/exam-state-model';
+import { ExamTimerComponent } from './exam-timer/exam-timer.component';
 
 @Component({
   selector: 'app-exam',
@@ -30,6 +31,7 @@ import { ExamState } from '../../models/exam-state-model';
     TrueFalseExamComponent,
     CustomModalQuestionValidatorComponent,
     ExamProgressComponent,
+    ExamTimerComponent,
     ExamButtonActionsComponent
   ],
   templateUrl: './exam.component.html',
